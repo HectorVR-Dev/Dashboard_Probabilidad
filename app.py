@@ -1,7 +1,6 @@
 import streamlit as st
 from PIL import Image
 import pandas as pd
-from typing import Union
 
 
 import app.utils.functions as utils

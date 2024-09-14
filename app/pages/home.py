@@ -20,8 +20,8 @@ def show_home(self):
     El dataset depurado cuenta con las siguientes características:
 
     - Tiene **{len(self.df)}** estudiantes con **{self.nvarn+self.nvarc}** variables.
-    - **{self.nvarn}** variables numéricas.
-    - **{self.nvarc}** variables categóricas.
+    - **{self.nvarn - 1}** variables numéricas.
+    - **{self.nvarc + 1}** variables categóricas.
 
         A continuación, puede seleccionar cualquier variable para ver su respectiva descripción:
     """)
