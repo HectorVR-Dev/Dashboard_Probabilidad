@@ -9,10 +9,8 @@ def show_eda(self):
     # una breve introducción al EDA y se proporciona un selector de acciones que incluye opciones para realizar
     # estadísticas descriptivas y graficar variables. Dependiendo de la acción seleccionada por el usuario, se
     # llama a las funciones correspondientes para realizar la estadística descriptiva o la visualización de variables.
-
-    st.markdown("""
-        # **Análisis Exploratorio de Datos**
-                
+    st.title("Análisis Exploratorio de Datos (EDA)")
+    st.markdown("""    
         En esta sección, puedes explorar y analizar los datos de manera interactiva.
         """)
 

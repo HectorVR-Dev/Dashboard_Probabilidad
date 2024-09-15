@@ -1,15 +1,15 @@
 import streamlit as st
 import pandas as pd
 
-def CreateMultiSelect(self, label: str, column: str, options: list, fuction, **args):
+def CreateMultiSelect(self,only:bool, label: str, column: str, options: list, fuction, **args):
     # crea un widget de selección múltiple que permite al usuario seleccionar opciones de una lista proporcionada.
     if args:
-        fuction(self,label, column, options, **args)
+        fuction(self,only,label, column, options, **args)
     else:
-        fuction(self,label, column, options)
+        fuction(self,only,label, column, options)
 
 
-def _CreateMultiSelect_WithDDF(self,
+def _CreateMultiSelect_WithDDF(self, only: bool,
                                 label: str,
                                 column: str,
                                 options: list,
@@ -19,14 +19,15 @@ def _CreateMultiSelect_WithDDF(self,
     # filas donde los valores de la columna especificada (column) coinciden con las opciones seleccionadas por el usuario.
     # Utiliza un DataFrame auxiliar (df) para mapear las selecciones del usuario a los valores correspondientes de la
     # columna especificada.
-
-    Select = st.multiselect(label=label, options=options)
-
-    Select = df[df.iloc[:, 1].isin(Select)].iloc[:, 0].tolist()
+    if only:
+        Select = [st.selectbox(label=label, options=options)]
+    else:
+        Select = st.multiselect(label=label, options=options)
+        Select = df[df.iloc[:, 1].isin(Select)].iloc[:, 0].tolist()
 
     self.modr = self.modr[self.modr[column].isin(Select)]
 
-def _CreateMultiSelect_WithoutDDF(self,
+def _CreateMultiSelect_WithoutDDF(self, only: bool,
                                     label: str,
                                     column: str,
                                     options: list):
@@ -34,20 +35,26 @@ def _CreateMultiSelect_WithoutDDF(self,
     # en una lista desplegable y permite al usuario seleccionar una o más opciones. Luego, la función actualiza el
     # DataFrame modr para incluir solo las filas donde los valores de la columna especificada (column) coinciden con
     # las opciones seleccionadas por el usuario.
-    Select = st.multiselect(label=label,
-                            options=options)
+    if only:
+        Select = [st.selectbox(label=label, options=options)]
+    else:
+        Select = st.multiselect(label=label, options=options)
+
     self.modr = self.modr[self.modr[column].isin(Select)]
 
-def _CreateMultiSelectModified(self,
+def _CreateMultiSelectModified(self, only: bool,
                                 label: str,
                                 column: str,
-                                options: list,):
+                                options: list):
     # crea un widget de selección múltiple modificado para manejar una variable binaria específica. Permite al usuario seleccionar entre
     # las opciones proporcionadas, y si se selecciona "SI" pero no "NO", filtra el DataFrame modr para incluir solo las filas donde la
     # columna especificada (column) tenga el valor "SI". Del mismo modo, si se selecciona "NO" pero no "SI", filtra el DataFrame para
     # incluir solo las filas donde la columna tenga el valor "NO". Si ambas opciones están seleccionadas o ninguna está seleccionada,
     # no se realiza ningún filtrado y se mantiene el DataFrame original.
-    Select = st.multiselect(label=label, options=options)
+    if only:
+        Select = [st.selectbox(label=label, options=options)]
+    else:
+        Select = st.multiselect(label=label, options=options)
 
     if "SI" in Select and "NO" not in Select:
         self.modr = self.modr[self.modr[column].isin(["SI"])]
@@ -58,17 +65,18 @@ def _CreateMultiSelectModified(self,
     else:
         self.modr = self.modr
 
-def _CreateMultiselectWithNAN(self,
+def _CreateMultiselectWithNAN(self, only: bool,
                                 label: str,
                                 column: str,
-                                options: list,
-                                **args):
+                                options: list):
     # crea un widget de selección múltiple que permite al usuario seleccionar opciones de una lista proporcionada.
     # Si no se selecciona ninguna opción, el DataFrame modr no se filtra y permanece sin cambios. Si se seleccionan
     # opciones, el DataFrame se filtra para incluir solo las filas donde la columna especificada (column) tenga valores
     # que coincidan con las opciones seleccionadas.
-
-    Select = st.multiselect(label=label,options=options)
+    if only:
+        Select = [st.selectbox(label=label, options=options)]
+    else:
+        Select = st.multiselect(label=label,options=options)
 
     if not Select:
         self.modr = self.modr

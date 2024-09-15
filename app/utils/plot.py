@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
 
@@ -8,8 +9,20 @@ def histogram(df, data: str):
     # Se crea un DataFrame con la columna de datos seleccionada y se utiliza seaborn para trazar el histograma. Se establecen etiquetas
     # adecuadas para los ejes x e y del histograma. Finalmente, se devuelve el objeto del histograma.
     dataframe = pd.DataFrame(df[data])
+    histogram_params = {'AVANCE_CARRERA': [-0.05, 100.05, 5, 0, 100, 10],
+                        'EDAD': [9.5, 60.05, 1, 10, 60, 5],
+                        'NUMERO_MATRICULAS': [-0.5, 15.5, 1, 0, 15, 1],
+                        'PAPA': [-0.05, 5.05, 0.1, 0, 5.1, 0.5],
+                        'PROME_ACADE': [-0.05, 5.05, 0.1, 0, 5.1, 0.5],
+                        'PBM_CALCULADO': [-0.05, 100.05, 1, 0, 100, 10],
+                        'PUNTAJE_ADMISION': [199.5, 1000.5, 25, 200, 1100, 100]
+                        }
+    [stard, end, step, x_stard, x_end, x_step] = histogram_params[data]
 
-    plot = sns.histplot(x=data, data=dataframe, color="#A31D31")
+    bins_edges = np.arange(stard, end, step)
+    plot = sns.histplot(x=data, data=dataframe, color="#A31D31", bins=bins_edges)
+    
+    plt.xticks(np.arange(x_stard, x_end, x_step))
     plot.set_xlabel(data)
     plot.set_ylabel("Recuento")
     plt.gcf().set_facecolor("#F3F0F0")

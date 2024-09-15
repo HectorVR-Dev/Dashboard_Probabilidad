@@ -36,8 +36,7 @@ def RenameColumns(df: pd.DataFrame, **args):
     for column in args["columns"]:
         rename = pd.read_csv(f"app/data/{column}.csv")
         vars = rename.columns[1]
-        df[column] = df[column].map(
-            rename.set_index(column)[vars])
+        df[column] = df[column].map(rename.set_index(column)[vars])
 
 def convfloat(column, df):
         k = [np.float64(d.replace(',', '.')) if isinstance(
@@ -206,15 +205,11 @@ def desc_var(var):
 
         La edad del estudiante puede ser un factor crucial en varios aspectos:
 
-            - **Análisis demográfico**: La distribución de edades entre los estudiantes puede proporcionar información valiosa sobre la composición de la población estudiantil, como la proporción de estudiantes jóvenes y adultos.
-    
-            - **Identificación de necesidades**: Las necesidades y características de los estudiantes pueden variar según su edad. Por ejemplo, los estudiantes más jóvenes pueden requerir más apoyo académico y social para adaptarse a la vida universitaria, mientras que los estudiantes mayores pueden tener responsabilidades adicionales, como el trabajo o la familia.
-    
-            - **Planificación académica**: La edad de los estudiantes puede influir en su progreso académico, tiempo de graduación y participación en programas especiales.
-    
-            - **Evaluación institucional**: La edad de los estudiantes puede ser un indicador importante para evaluar la efectividad de los programas de reclutamiento y retención, así como para identificar posibles desafíos y oportunidades dentro de la institución.
-    
-            - **Estudios longitudinales**: Seguir la evolución de los estudiantes a lo largo del tiempo puede proporcionar información sobre el impacto de la educación superior en diferentes grupos de edad, así como insights sobre el desarrollo personal y profesional de los estudiantes.
+        - **Análisis demográfico**: La distribución de edades entre los estudiantes puede proporcionar información valiosa sobre la composición de la población estudiantil, como la proporción de estudiantes jóvenes y adultos.
+        - **Identificación de necesidades**: Las necesidades y características de los estudiantes pueden variar según su edad. Por ejemplo, los estudiantes más jóvenes pueden requerir más apoyo académico y social para adaptarse a la vida universitaria, mientras que los estudiantes mayores pueden tener responsabilidades adicionales, como el trabajo o la familia.
+        - **Planificación académica**: La edad de los estudiantes puede influir en su progreso académico, tiempo de graduación y participación en programas especiales.
+        - **Evaluación institucional**: La edad de los estudiantes puede ser un indicador importante para evaluar la efectividad de los programas de reclutamiento y retención, así como para identificar posibles desafíos y oportunidades dentro de la institución.
+        - **Estudios longitudinales**: Seguir la evolución de los estudiantes a lo largo del tiempo puede proporcionar información sobre el impacto de la educación superior en diferentes grupos de edad, así como insights sobre el desarrollo personal y profesional de los estudiantes.
         """
     elif var == "NUMERO_MATRICULAS":
         des = """

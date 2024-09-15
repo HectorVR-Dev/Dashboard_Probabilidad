@@ -51,9 +51,10 @@ def Select_Graficas(self, df):
         # Permite al usuario seleccionar una variable categórica y una variable numérica, y genera un diagrama de caja correspondiente.
         # También proporciona una descripción de ambas variables seleccionadas.
         col1, col2 = st.columns(2)
-
-        varc = col1.selectbox(label="**Variable categórica:**", options=self.var_categoric)
-        varn = col2.selectbox(label="**Variable numerica:**", options=[""]+self.var_numeric)
+        
+        varn = col1.selectbox(label="**Variable numerica:**", options=[""]+self.var_numeric)
+        varc = col2.selectbox(label="**Variable categórica:**", options=self.var_categoric)
+        
 
         col_plot, col_desc = st.columns([2,1])
         if varc and varn:
