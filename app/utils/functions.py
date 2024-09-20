@@ -46,6 +46,44 @@ def convfloat(column, df):
         return df
 
 
+def conv_va_discreta(df: pd.DataFrame, col_name: str) -> pd.DataFrame:
+    df_result = df[[col_name]].copy()
+    if col_name.startswith("COD_"):
+        # Cargar el CSV con los valores reales
+        mapping_df = pd.read_csv(f"app/data/{col_name}.csv")
+        df_result[col_name] = df_result[col_name].map(mapping_df.set_index(col_name)[mapping_df.columns[1]])
+
+
+    valores_unicos = sorted(df_result[col_name].unique())
+    mapa_discreto = {valor: idx for idx, valor in enumerate(valores_unicos)}
+
+    # Crear un nuevo DataFrame con solo dos columnas: la original y la asignada
+    df_result[f'{col_name}_discreto'] = df_result[col_name].map(mapa_discreto)
+
+    
+
+    return df_result, mapa_discreto
+
+def estandarizar_columna_frecuencia(df: pd.DataFrame, col_name: str) -> pd.DataFrame:
+    """
+    Toma un DataFrame y una columna discreta, y devuelve un DataFrame
+    donde los valores de la columna están estandarizados en función de su frecuencia relativa.
+    
+    :param df: DataFrame original
+    :param col_name: Nombre de la columna a estandarizar
+    :return: DataFrame con una nueva columna 'Frecuencia_Estandarizada' con las frecuencias relativas
+    """
+    # Crear una copia del DataFrame original para evitar modificar el original
+    df_copy = df.copy()
+
+    # Calcular la frecuencia de cada valor en la columna
+    frecuencias = df_copy[col_name].value_counts(normalize=True)
+
+    # Crear una nueva columna con las frecuencias estandarizadas
+    df_copy['Frecuencia_Estandarizada'] = df_copy[col_name].map(frecuencias)
+
+    return df_copy
+
 def calcular_probabilidad(df, target):
     # Contar la frecuencia de cada valor en la columna target
     conteo_valores = df[target].value_counts(normalize=True)
@@ -143,12 +181,12 @@ def desc_var(var):
 
         - **Valores posibles:** Los valores posibles para esta variable y sus correspondientes planes de estudios son:
 
-            - L006: INGENIERÍA MECATRÓNICA
-            - L005: INGENIERÍA BIOLÓGICA
-            - L002: ESTADÍSTICA
-            - L004: GESTIÓN CULTURAL Y COMUNICATIVA
-            - L001: BIOLOGÍA
-            - L003: GEOGRAFÍA
+            - L001:BIOLOGÍA
+            - L002:ESTADÍSTICA
+            - L003:GEOGRAFÍA
+            - L004:GESTIÓN CULTURAL Y COMUNICATIVA
+            - L005:INGENIERÍA BIOLÓGICA
+            - L006:INGENIERÍA MECATRÓNICA
 
         Esta variable es importante para realizar análisis específicos relacionados con la distribución de los estudiantes en diferentes planes de estudios y para comprender mejor la estructura y diversidad de los programas académicos ofrecidos por la institución.
         """
