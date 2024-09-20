@@ -21,11 +21,14 @@ def _CreateMultiSelect_WithDDF(self, only: bool,
     # columna especificada.
     if only:
         Select = [st.selectbox(label=label, options=options)]
+        self.select.append([column, Select[0]])
+        Select = df[df.iloc[:, 1].isin(Select)].iloc[:, 0].tolist()
     else:
         Select = st.multiselect(label=label, options=options)
         Select = df[df.iloc[:, 1].isin(Select)].iloc[:, 0].tolist()
 
     self.modr = self.modr[self.modr[column].isin(Select)]
+
 
 def _CreateMultiSelect_WithoutDDF(self, only: bool,
                                     label: str,
@@ -37,6 +40,7 @@ def _CreateMultiSelect_WithoutDDF(self, only: bool,
     # las opciones seleccionadas por el usuario.
     if only:
         Select = [st.selectbox(label=label, options=options)]
+        self.select.append([column, Select[0]])
     else:
         Select = st.multiselect(label=label, options=options)
 
@@ -53,6 +57,7 @@ def _CreateMultiSelectModified(self, only: bool,
     # no se realiza ningún filtrado y se mantiene el DataFrame original.
     if only:
         Select = [st.selectbox(label=label, options=options)]
+        self.select.append([column, Select[0]])
     else:
         Select = st.multiselect(label=label, options=options)
 
@@ -65,6 +70,9 @@ def _CreateMultiSelectModified(self, only: bool,
     else:
         self.modr = self.modr
 
+        
+    
+
 def _CreateMultiselectWithNAN(self, only: bool,
                                 label: str,
                                 column: str,
@@ -75,10 +83,10 @@ def _CreateMultiselectWithNAN(self, only: bool,
     # que coincidan con las opciones seleccionadas.
     if only:
         Select = [st.selectbox(label=label, options=options)]
+        self.select.append([column, Select[0]])
     else:
         Select = st.multiselect(label=label,options=options)
 
-    if not Select:
-        self.modr = self.modr
-    else:
+    if Select:
         self.modr = self.modr[self.modr[column].isin(Select)]
+    

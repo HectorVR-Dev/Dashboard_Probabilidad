@@ -45,6 +45,45 @@ def convfloat(column, df):
         df[column] = k
         return df
 
+
+def calcular_probabilidad(df, target):
+    # Contar la frecuencia de cada valor en la columna target
+    conteo_valores = df[target].value_counts(normalize=True)
+    
+    # Crear un nuevo DataFrame con los valores y sus probabilidades
+    df_probabilidades = pd.DataFrame({target: conteo_valores.index, 
+                                      'probabilidad': conteo_valores.values,
+                                      'porcentaje': (conteo_valores.values * 100).round(1)})
+    
+    return df_probabilidades
+
+def calcular_probabilidad_intervalo(df, columna, min_valor, max_valor):
+    """
+    Calcula la probabilidad de que un valor en una columna esté dentro del intervalo [min_valor, max_valor].
+    
+    Parámetros:
+    df : DataFrame de pandas
+        El DataFrame que contiene los datos.
+    columna : str
+        El nombre de la columna sobre la cual calcular la probabilidad.
+    min_valor : float
+        El valor mínimo del intervalo.
+    max_valor : float
+        El valor máximo del intervalo.
+    
+    Retorna:
+    float
+        La probabilidad de que un valor en la columna esté dentro del intervalo [min_valor, max_valor].
+    """
+    
+    # Filtrar los datos que están dentro del intervalo [min_valor, max_valor]
+    datos_en_intervalo = df[(df[columna] >= min_valor) & (df[columna] <= max_valor)]
+    
+    # Calcular la probabilidad
+    probabilidad = len(datos_en_intervalo) / len(df)
+    
+    return probabilidad
+
 def count(variable_seleccionada, df):
     # La función count() calcula la frecuencia y el porcentaje de ocurrencia de los valores únicos de una variable
     # categórica seleccionada. Si la variable seleccionada corresponde a ciertos nombres específicos, carga datos
@@ -82,7 +121,12 @@ def count(variable_seleccionada, df):
             est_cat = est_cat.sort_values(by=est_cat.columns[-2], ascending=False)
             return est_cat, False
 
+def lista_a_string(lista):
+    partes = [f"{R} = {H}" for R, H in lista]
+    return ", ".join(partes)
+
 def desc_var(var):
+
     # recibe como entrada el nombre de una variable var y devuelve una descripción correspondiente a esa variable.
     des = ""
     if var == "":
