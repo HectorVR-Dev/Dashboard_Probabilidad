@@ -111,3 +111,25 @@ def scatter(df, var1: str, var2: str):
     plot.set_ylabel(var2)
     plt.gcf().set_facecolor("#F3F0F0")
     return plot
+
+
+def plot_barras_dist(df, dist_func=None, dist_params=None):
+    fig, ax = plt.subplots()
+
+    # Gráfico de barras
+    ax.bar(df['Valores'], df['Frecuencia'], alpha=0.7, label='Datos')
+
+    if dist_func and dist_params:
+        # Calcular la distribución discreta
+        x = np.arange(min(df['Valores']), max(df['Valores']) + 1)
+        y = dist_func(x, *dist_params)
+
+        # Graficar la distribución seleccionada
+        ax.plot(x, y, 'ro-', label='Función de Distribución')
+
+    ax.set_xlabel('Valores X=x')
+    ax.set_ylabel('Probabilidad')
+    ax.set_title('Datos con Función de Distribución')
+    ax.legend()
+
+    return fig

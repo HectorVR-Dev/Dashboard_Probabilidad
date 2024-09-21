@@ -45,7 +45,6 @@ def convfloat(column, df):
         df[column] = k
         return df
 
-
 def conv_va_discreta(df: pd.DataFrame, col_name: str) -> pd.DataFrame:
     df_result = df[[col_name]].copy()
     if col_name.startswith("COD_"):
@@ -58,13 +57,13 @@ def conv_va_discreta(df: pd.DataFrame, col_name: str) -> pd.DataFrame:
     mapa_discreto = {valor: idx for idx, valor in enumerate(valores_unicos)}
 
     # Crear un nuevo DataFrame con solo dos columnas: la original y la asignada
-    df_result[f'{col_name}_discreto'] = df_result[col_name].map(mapa_discreto)
+    df_result['Valores'] = df_result[col_name].map(mapa_discreto)
 
     
 
     return df_result, mapa_discreto
 
-def estandarizar_columna_frecuencia(df: pd.DataFrame, col_name: str) -> pd.DataFrame:
+def estandarizar_columna_frecuencia(df: pd.DataFrame) -> pd.DataFrame:
     """
     Toma un DataFrame y una columna discreta, y devuelve un DataFrame
     donde los valores de la columna están estandarizados en función de su frecuencia relativa.
@@ -77,12 +76,13 @@ def estandarizar_columna_frecuencia(df: pd.DataFrame, col_name: str) -> pd.DataF
     df_copy = df.copy()
 
     # Calcular la frecuencia de cada valor en la columna
-    frecuencias = df_copy[col_name].value_counts(normalize=True)
+    frecuencias = df_copy['Valores'].value_counts(normalize=True)
 
     # Crear una nueva columna con las frecuencias estandarizadas
-    df_copy['Frecuencia_Estandarizada'] = df_copy[col_name].map(frecuencias)
+    df_copy = df_copy.drop(columns=df.columns[0])
+    df_copy['Frecuencia'] = df_copy['Valores'].map(frecuencias)
 
-    return df_copy
+    return df_copy.drop_duplicates()
 
 def calcular_probabilidad(df, target):
     # Contar la frecuencia de cada valor en la columna target
