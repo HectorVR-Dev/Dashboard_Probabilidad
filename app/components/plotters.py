@@ -22,7 +22,7 @@ def Select_Graficas(self, df):
 
         var = st.selectbox(label="**Variables permitidas:**", options=[""]+self.var_numeric)
         
-        col_plot, col_desc = st.columns([2,1])
+        col_plot, col_desc = st.columns([2,2])
         if len(var) > 1:
             with col_plot:
                 st.pyplot(histogram(df, var).get_figure(),use_container_width=True)
@@ -37,7 +37,7 @@ def Select_Graficas(self, df):
         # También proporciona una descripción de la variable seleccionada.
 
         var = st.selectbox(label="**Variables permitidas:**", options=self.var_categoric)
-        col_plot, col_desc = st.columns([2,1])
+        col_plot, col_desc = st.columns([2,2])
         if len(var) > 1:
             with col_plot:
                 st.pyplot(barras(df, var).get_figure(), use_container_width=True)
@@ -56,7 +56,7 @@ def Select_Graficas(self, df):
         varc = col2.selectbox(label="**Variable categórica:**", options=self.var_categoric)
         
 
-        col_plot, col_desc = st.columns([2,1])
+        col_plot, col_desc = st.columns([2,2])
         if varc and varn:
             with col_plot:
                 st.pyplot(boxplot(df, varc, varn), use_container_width=True)
@@ -73,7 +73,7 @@ def Select_Graficas(self, df):
         var1 = col1.selectbox(label="**Primera Variable:**", options=[""]+self.var_numeric)
         var2 = col2.selectbox(label="**Segunda Variable:**", options=[""]+self.var_numeric)
 
-        col_plot, col_desc = st.columns([2,1])
+        col_plot, col_desc = st.columns([2,2])
         if var1 and var2:
             with col_plot:
                 st.pyplot(scatter(df, var1, var2).get_figure(), use_container_width=True)

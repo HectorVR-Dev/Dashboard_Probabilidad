@@ -3,6 +3,7 @@ import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
 
+sns.set(style="white")
 
 def histogram(df, data: str):
     # La función histogram() recibe un nombre de columna de datos y genera un histograma correspondiente utilizando la biblioteca Seaborn.
@@ -20,12 +21,13 @@ def histogram(df, data: str):
     [stard, end, step, x_stard, x_end, x_step] = histogram_params[data]
 
     bins_edges = np.arange(stard, end, step)
-    plot = sns.histplot(x=data, data=dataframe, color="#A31D31", bins=bins_edges)
+    plot = sns.histplot(x=data, data=dataframe, color="#b2b2b2", bins=bins_edges)
     
     plt.xticks(np.arange(x_stard, x_end, x_step))
     plot.set_xlabel(data)
+    plot.set_title('Histograma de ' + data)
     plot.set_ylabel("Recuento")
-    plt.gcf().set_facecolor("#F3F0F0")
+    
     return plot
 
 def barras(df, data: str):
@@ -49,7 +51,7 @@ def barras(df, data: str):
         if data != "COD_PLAN":
             label = [str(int(lab)) for lab in label]
 
-    plot = sns.barplot(x=label, y=values, color="#A31D31")
+    plot = sns.barplot(x=label, y=values, color="#b2b2b2")
 
     if data == "MUNICIPIO_NACIMIENTO":
         rotation = 90
@@ -65,8 +67,8 @@ def barras(df, data: str):
         plot.bar_label(plot.containers[0], fontsize=10)
 
     plot.set_xlabel(data)
+    plot.set_title('Gráfico de barras de ' + data)
     plot.set_ylabel("Recuento")
-    plt.gcf().set_facecolor("#F3F0F0")
     return plot
 
 def boxplot(df, varc: str, varn: str):
@@ -79,10 +81,11 @@ def boxplot(df, varc: str, varn: str):
 
     label = df[[varc]].iloc[:, 0].tolist()
     values = df[[varn]].iloc[:, 0].tolist()
-    plot = sns.boxplot(x=label, y=values, data=df, color="#A31D31")
+    plot = sns.boxplot(x=label, y=values, data=df, color="#b2b2b2")
 
     plot.set_xlabel(varc)
     plot.set_ylabel(varn)
+    plot.set_title('Diagrama de caja de ' + varn + ' por ' + varc)
 
     if varc == "MUNICIPIO_NACIMIENTO":
         plot.set_xticklabels(plot.get_xticklabels(), rotation=90, fontsize=4)
@@ -91,7 +94,8 @@ def boxplot(df, varc: str, varn: str):
         plot.set_xticklabels(plot.get_xticklabels(), rotation=45, horizontalalignment='right')
 
     plot = plt.gcf()
-    plt.gcf().set_facecolor("#F3F0F0")
+    
+    
     return plot
 
 def scatter(df, var1: str, var2: str):
@@ -109,7 +113,8 @@ def scatter(df, var1: str, var2: str):
 
     plot.set_xlabel(var1)
     plot.set_ylabel(var2)
-    plt.gcf().set_facecolor("#F3F0F0")
+    plot.set_title('Gráfico de dispersión de ' + var1 + ' vs ' + var2)
+    
     return plot
 
 
@@ -117,19 +122,66 @@ def plot_barras_dist(df, dist_func=None, dist_params=None):
     fig, ax = plt.subplots()
 
     # Gráfico de barras
-    ax.bar(df['Valores'], df['Frecuencia'], alpha=0.7, label='Datos')
+    ax.bar(df['Valores'], df['Frecuencia'], color="#b2b2b2")
+
+    for index, row in df.iterrows():
+        ax.text(row['Valores'], row['Frecuencia'] + 0.01, round(row['Frecuencia'], 2), color='black', ha="center")
+
+    max_frecuencia = df['Frecuencia'].max()
 
     if dist_func and dist_params:
         # Calcular la distribución discreta
         x = np.arange(min(df['Valores']), max(df['Valores']) + 1)
         y = dist_func(x, *dist_params)
 
+        if max(y) < max_frecuencia:
+            ax.set_ylim(0, max_frecuencia * 1.2)
         # Graficar la distribución seleccionada
         ax.plot(x, y, 'ro-', label='Función de Distribución')
+    else:
+        ax.set_ylim(0, max_frecuencia * 1.2)
 
     ax.set_xlabel('Valores X=x')
     ax.set_ylabel('Probabilidad')
     ax.set_title('Datos con Función de Distribución')
-    ax.legend()
+    ax.legend(loc='upper left')
+
+    return fig
+
+
+def plot_histograma_dist(df, data: str, dist_func=None, dist_params=None):
+    # Define los parámetros de los histogramas para cada variable
+    histogram_params = {
+        'AVANCE_CARRERA': [-0.05, 100.05, 5, 0, 100, 10],
+        'EDAD': [9.5, 60.05, 1, 10, 60, 5],
+        'NUMERO_MATRICULAS': [-0.5, 15.5, 1, 0, 15, 1],
+        'PAPA': [-0.05, 5.05, 0.1, 0, 5.1, 0.5],
+        'PROME_ACADE': [-0.05, 5.05, 0.1, 0, 5.1, 0.5],
+        'PBM_CALCULADO': [-0.05, 100.05, 1, 0, 100, 10],
+        'PUNTAJE_ADMISION': [199.5, 1000.5, 25, 200, 1100, 100]
+    }
+
+    # Extraer parámetros para la columna seleccionada
+    stard, end, step, x_stard, x_end, x_step = histogram_params[data]
+    bins_edges = np.arange(stard, end, step)
+
+    # Crear el histograma normalizado
+    fig, ax = plt.subplots()
+    frecuencias, bins, _ = ax.hist(df[data], bins=bins_edges, density=True, alpha=0.5, color="#b2b2b2", edgecolor="black")
+
+    # Graficar la función de distribución continua si se proporciona
+    if dist_func and dist_params:
+        x = np.linspace(stard, end, 1000)
+        y = dist_func(x, *dist_params)
+        ax.plot(x, y, 'r-', lw=2, label='Función de Distribución')
+
+    # Etiquetas y título
+    ax.set_xlabel(data)
+    ax.set_ylabel("Densidad de Probabilidad")
+    ax.set_title('Histograma de ' + data)
+    ax.legend(loc='upper right')
+
+    plt.xticks(np.arange(x_stard, x_end, x_step))
+    plt.show()
 
     return fig

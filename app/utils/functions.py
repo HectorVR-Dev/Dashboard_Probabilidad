@@ -63,7 +63,31 @@ def conv_va_discreta(df: pd.DataFrame, col_name: str) -> pd.DataFrame:
 
     return df_result, mapa_discreto
 
-def estandarizar_columna_frecuencia(df: pd.DataFrame) -> pd.DataFrame:
+def estandarizar_columna_numerica(df, columna, bins=30):
+    # Extraer los datos de la columna
+    datos = df[columna].dropna()  # Eliminamos valores NaN
+
+    # Crear el histograma de los datos
+    frecuencias, bordes = np.histogram(datos, bins=bins, density=False)
+
+    # Calcular el ancho de cada bin
+    ancho_bin = bordes[1] - bordes[0]
+
+    # Normalizar las frecuencias para que el área total sea 1
+    densidad = frecuencias / (len(datos) * ancho_bin)
+
+    # Calcular el centro de cada bin
+    centros = (bordes[:-1] + bordes[1:]) / 2
+
+    # Crear el DataFrame con los valores de x (centros de bins) y y (densidad normalizada)
+    df_resultado = pd.DataFrame({
+        'Valores': centros,
+        'Frecuencia': densidad
+    })
+
+    return df_resultado
+
+def estandarizar_columna_categorica(df: pd.DataFrame) -> pd.DataFrame:
     """
     Toma un DataFrame y una columna discreta, y devuelve un DataFrame
     donde los valores de la columna están estandarizados en función de su frecuencia relativa.

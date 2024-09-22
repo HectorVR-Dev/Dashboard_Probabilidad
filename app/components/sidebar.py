@@ -11,7 +11,7 @@ def show_sidebar(self):
 
     page = st.sidebar.radio(    label="empty_label", options=["Inicio", "EDA y Visualización", "Filtros Interactivos",
                                                                "Probabilidad condicional", "Estimacion de distribuciones",
-                                                               "Conclusiones", "Notas de version y recursos adicionales",
+                                                               "Notas de version y recursos adicionales",
                                                                "Feedback y Contacto"],label_visibility='hidden')
 
     pages = {   'Inicio': home.show_home,
@@ -19,7 +19,6 @@ def show_sidebar(self):
                 'Filtros Interactivos': filters.show_filters,
                 'Probabilidad condicional': conditional_probability.show_CP,
                 'Estimacion de distribuciones': distribution_estimation.show_DE,
-                'Conclusiones': conclusions.show_conclusions,
                 'Notas de version y recursos adicionales': resources.show_resources,
                 'Feedback y Contacto': feedback.show_feedback}
 
